@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body>  
+    <main id="main-doc">
+      <div class="container">
+      <nav id="navbar">
+        <header>
+        <a href="#What’s_New_In_Python_3.10" class="nav-link" >What’s New In Python 3.10</a>
+        <a href="#Parenthesized_context_managers" class="nav-link">Parenthesized context managers</a>
+        <a href="#Better_error_messages" class="nav-link">Better error messages</a>
+        <a href="#IndentationErrors" class="nav-link">IndentationErrors</a>
+        <a href="#AttributeErrors" class="nav-link">AttributeErrors</a>
+        </header>
+      </nav>
+      </div>
+      <div class="container">
+      <section class="main-section" id="What’s_New_In_Python_3.10">
+        <header>What’s New In Python 3.10</header>
+        <p class="paragraph">What's new in this version include, among other things, syntax changes, structural pattern matching, new features related to type hints, clearer and more specific error messages, or improvements to some modules.</p>
+        <p class="paragraph code">New Features</p>
+      </section>
+      <section class="main-section" id="Parenthesized_context_managers">
+        <header>Parenthesized context managers</header>
+        <p>Using enclosing parentheses for continuation across multiple lines in context managers is now supported. This allows formatting a long collection of context managers in multiple lines in a similar way as it was previously possible with import statements. For instance, all these examples are now valid:</p>
+        <p class="paragraph code"><code>with (CtxManager() as example):<br>
+    ...<br>
+
+with (
+    CtxManager1(),<br>
+    CtxManager2()
+):
+    ...<br>
+
+with (CtxManager1() as example,<br>
+      CtxManager2()):<br>
+    ...<br>
+
+with <br>(CtxManager1(),<br>
+      CtxManager2() as example):<br>
+    ...
+
+with (<br>
+    CtxManager1() as example1,<br>
+    CtxManager2() as example2<br>
+):<br>
+    ...</code></p>
+      </section>
+      <section class="main-section" id="Better_error_messages">
+        <header>Better error messages</header>
+        <p>When parsing code that contains unclosed parentheses or brackets the interpreter now includes the location of the unclosed bracket of parentheses instead of displaying SyntaxError: unexpected EOF while parsing or pointing to some incorrect location. For instance, consider the following code (notice the unclosed <code>‘{‘):</code></p>
+        <p class="code"><code>expected = {9: 1, 18: 2, 19: 2, 27: 3, 28: 3, 29: 3, 36: 4, 37: 4, <br>
+            38: 4, 39: 4, 45: 5, 46: 5, 47: 5, 48: 5, 49: 5, 54: 6,<br>
+some_other_code = foo()</code></p>
+<p>This improvement was contributed by Pablo Galindo in bpo-43914.
+
+A considerable amount of new specialized messages for SyntaxError exceptions have been incorporated. Some of the most notable ones are as follows:</p>
+<ul>
+  <li><p>Missing : before blocks:</p>
+    <p class="code"><code>>>> if rocket.position > event_horizon<br>
+  File "<stdin>", line 1
+    if rocket.position > event_horizon<br>
+                                      ^<br>
+SyntaxError: expected ':'</code></p>
+  </li>
+  <li>
+    <p>Unparenthesised tuples in comprehensions targets:</p>
+    <p class="code"><code>>>> {x,y for x,y in zip('abcd', '1234')}<br>
+  File "<stdin>", line 1<br>
+    {x,y for x,y in zip('abcd', '1234')}<br>
+     ^<br>
+SyntaxError: did you forget parentheses around the comprehension target?</code></p>
+  </li>
+  <li>
+    <p>Missing commas in collection literals and between expressions:</p>
+    <p class="code"><code>>>> items = {
+... x: 1,
+... y: 2
+... z: 3,
+  File "<stdin>", line 3
+    y: 2
+       ^
+SyntaxError: invalid syntax. Perhaps you forgot a comma?</code></p>
+    </li>
+  <li>
+    <p>Multiple Exception types without parentheses:</p>
+    <p class="code"><code>>>> try:
+...     build_dyson_sphere()<br>
+... except NotEnoughScienceError, NotEnoughResourcesError:<br>
+  File "<stdin>", line 3<br>
+    except NotEnoughScienceError, NotEnoughResourcesError:<br>
+           ^<br>
+SyntaxError: multiple exception types must be parenthesized</code></p>
+    </li>
+  <li>
+    <p>Missing : and values in dictionary literals:</p>
+    <p class="code"><code>>>> values = {<br>
+... x: 1,<br>
+... y: 2,<br>
+... z:<br>
+... }<br>
+  File "<stdin>", line 4<br>
+    z:<br>
+     ^<br>
+SyntaxError: expression expected after dictionary key and ':'<br>
+
+>>> values = {x:1, y:2, z w:3}<br>
+  File "<stdin>", line 1<br>
+    values = {x:1, y:2, z w:3}<br>
+                        ^
+SyntaxError: ':' expected after dictionary key</code></p>
+    </li>
+  <li>
+    <p><code>try</code> blocks without except or <code>finally</code> blocks:</p>
+    <p class="code"><code>>>> try:<br>
+...     x = 2<br>
+... something = 3<br>
+  File "<stdin>", line 3<br>
+    something  = 3<br>
+    ^^^^^^^^^<br>
+SyntaxError: expected 'except' or 'finally' block</code></p>
+    </li>
+  <li>
+    <p>Usage of = instead of == in comparisons:</p>
+    <p class="code"><code>cket.position = event_horizon:<br>
+  File "<stdin>", line 1<br>
+    if rocket.position = event_horizon:<br>
+                       ^<br>
+SyntaxError: cannot assign to attribute here. Maybe you meant '==' instead of '='?</code></p>
+    </li>
+  <li>
+    <p>Usage of * in f-strings:</p>
+    <p class="code"><code>>>> f"Black holes {*all_black_holes} and revelations"<br>
+  File "<stdin>", line 1<br>
+    (*all_black_holes)<br>
+     ^<br>
+SyntaxError: f-string: cannot use starred expression here</code></p>
+    </li>
+</ul>
+      </section>
+      <section class="main-section" id="IndentationErrors">
+        <header>IndentationErrors</header>
+        <p>Many IndentationError exceptions now have more context regarding what kind of block was expecting an indentation, including the location of the statement:</p>
+        <p class="code"> <code>>>> def foo():<br>
+...    if lel:<br>
+...    x = 2<br>
+  File "<stdin>", line 3<br>
+    x = 2<br>
+    ^<br>
+IndentationError: expected an indented block after 'if' statement in line 2</code></p>
+      </section>
+      <section class="main-section" id="AttributeErrors">
+        <header>AttributeErrors</header>
+        <p>When printing AttributeError, PyErr_Display() will offer suggestions of similar attribute names in the object that the exception was raised from:</p>
+        <p class="code"> <code>>>> collections.namedtoplo
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: module 'collections' has no attribute 'namedtoplo'. Did you mean: namedtuple?</code></p>
+      </section>
+      </div>
+    </main>
+  </body>
+</html>
+
+
+
+
